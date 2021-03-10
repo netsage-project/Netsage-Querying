@@ -1,10 +1,11 @@
 
 const { Client } = require('@elastic/elasticsearch')
+const fs = require('fs')
 //For password security. 
 require('dotenv').config();
 //Create .env file and setup the following 
-//USER_NAME : netsage username to access elasticsearch datasource 
-//USER_PASSWORD : password to authenticate. 
+//USER_NAME=netsage username to access elasticsearch datasource 
+//USER_PASSWORD=password to authenticate. 
 
 
 
@@ -53,7 +54,7 @@ const client = new Client({
 //     }
 //   })
   
-//   // callback API
+// callback API 
 //   client.search({
 //     index: 'my-index',
 //     body: {
@@ -66,19 +67,51 @@ const client = new Client({
 //   })
 
 //EXAMPLE SEARCH QUERY 
-client.search({
+// client.search({
+//     index: 'om-ns-netsage-*',
+//     body: {
+//       query: {
+//         match: {'meta.sensor_id.keyword' :'University of Hawaii Tstat' }
+//       }
+//     }
+//   }, (err, result) => {
+//         //Handle error
+//     if (err) console.log(err);
+//     if(result){
+//         UHresults = result.body.hits;
+//         console.log(UHresults); 
+//         myJSON = JSON.stringify(UHresults);
+//         fs.writeFile('./testOutput.json', myJSON, err => {
+//           if (err) {
+//               console.log('Error writing file', err)
+//           } else {
+//               console.log('Successfully wrote file')
+//           }
+//         })
+//     }
+//   })
+
+  client.search({
     index: 'om-ns-netsage-*',
     body: {
       query: {
-        match: {'meta.sensor_id.keyword' :'University of Hawaii Tstat' }
+          match: {'meta.sensor_id' :'University of Hawaii Tstat' }
       }
     }
   }, (err, result) => {
         //Handle error
     if (err) console.log(err);
     if(result){
-        //do things with the result. 
-        console.log(result.body.hits); 
+        UHresults = result.body.hits;
+        console.log(UHresults); 
+        myJSON = JSON.stringify(UHresults);
+        fs.writeFile('./testOutput.json', myJSON, err => {
+          if (err) {
+              console.log('Error writing file', err)
+          } else {
+              console.log('Successfully wrote file')
+          }
+        })
     }
   })
 
