@@ -8,7 +8,6 @@ require('dotenv').config();
 //USER_PASSWORD=password to authenticate. 
 
 
-
 const userName = process.env.USER_NAME; 
 const password = process.env.USER_PASSWORD; 
 
@@ -91,11 +90,21 @@ const client = new Client({
 //     }
 //   })
 
+// specify the output files for queried data
+let outputFiles = ['./testOutput01.json', './testOutput02.json', './testOutput03.json'];
+
+// This loop will query and store docs in each output file specified in array: outputFiles.  
+// The number of docs per file can be set in querySize variable.
+for (let i = 0; i < outputFiles.length; i++) {
+  var querySize = 500; // max is 1000
+  var startDoc = i * querySize;
   client.search({
     index: 'om-ns-netsage-*',
     body: {
+      from: startDoc,
+      size: querySize,  
       query: {
-          match: {'meta.sensor_id' :'University of Hawaii Tstat' }
+          match: {"meta.sensor_id":"University of Hawaii Tstat" }
       }
     }
   }, (err, result) => {
@@ -105,7 +114,7 @@ const client = new Client({
         UHresults = result.body.hits;
         console.log(UHresults); 
         myJSON = JSON.stringify(UHresults);
-        fs.writeFile('./testOutput.json', myJSON, err => {
+        fs.writeFile(outputFiles[i], myJSON, err => {
           if (err) {
               console.log('Error writing file', err)
           } else {
@@ -114,6 +123,8 @@ const client = new Client({
         })
     }
   })
+}
+
 
 //The result is always in the following format. 
 //   {
