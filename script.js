@@ -91,12 +91,13 @@ const client = new Client({
 //   })
 
 // specify the output files for queried data
-let outputFiles = ['./testOutput01.json', './testOutput02.json', './testOutput03.json'];
+// let outputFiles = ['./testOutput01.json', './testOutput02.json', './testOutput03.json', './testOutput04.json', './testOutput05.json', './testOutput06.json', './testOutput07.json', './testOutput08.json', './testOutput08.json', './testOutput10.json'];
+outputFiles = ['./testHI-Guam.json']
 
 // This loop will query and store docs in each output file specified in array: outputFiles.  
 // The number of docs per file can be set in querySize variable.
 for (let i = 0; i < outputFiles.length; i++) {
-  var querySize = 500; // max is 1000
+  var querySize = 100; // max is 1000
   var startDoc = i * querySize;
   client.search({
     index: 'om-ns-netsage-*',
@@ -104,7 +105,7 @@ for (let i = 0; i < outputFiles.length; i++) {
       from: startDoc,
       size: querySize,  
       query: {
-          match: {"meta.sensor_id":"University of Hawaii Tstat" }
+          match: {"meta.sensor_id":"Hawaii Guam netflow" }
       }
     }
   }, (err, result) => {
@@ -112,7 +113,7 @@ for (let i = 0; i < outputFiles.length; i++) {
     if (err) console.log(err);
     if(result){
         UHresults = result.body.hits;
-        console.log(UHresults); 
+        //console.log(UHresults); 
         myJSON = JSON.stringify(UHresults);
         fs.writeFile(outputFiles[i], myJSON, err => {
           if (err) {
