@@ -39,8 +39,6 @@ const client = new Client({
 //   })
 
 
-
-
 //USAGE
 
 // promise API
@@ -66,56 +64,21 @@ const client = new Client({
 //   })
 
 //EXAMPLE SEARCH QUERY 
-// client.search({
-//     index: 'om-ns-netsage-*',
-//     body: {
-//       query: {
-//         match: {'meta.sensor_id.keyword' :'University of Hawaii Tstat' }
-//       }
-//     }
-//   }, (err, result) => {
-//         //Handle error
-//     if (err) console.log(err);
-//     if(result){
-//         UHresults = result.body.hits;
-//         console.log(UHresults); 
-//         myJSON = JSON.stringify(UHresults);
-//         fs.writeFile('./testOutput.json', myJSON, err => {
-//           if (err) {
-//               console.log('Error writing file', err)
-//           } else {
-//               console.log('Successfully wrote file')
-//           }
-//         })
-//     }
-//   })
-
-// specify the output files for queried data
-// let outputFiles = ['./testOutput01.json', './testOutput02.json', './testOutput03.json', './testOutput04.json', './testOutput05.json', './testOutput06.json', './testOutput07.json', './testOutput08.json', './testOutput08.json', './testOutput10.json'];
-outputFiles = ['./testHI-Guam.json']
-
-// This loop will query and store docs in each output file specified in array: outputFiles.  
-// The number of docs per file can be set in querySize variable.
-for (let i = 0; i < outputFiles.length; i++) {
-  var querySize = 100; // max is 1000
-  var startDoc = i * querySize;
-  client.search({
+client.search({
     index: 'om-ns-netsage-*',
     body: {
-      from: startDoc,
-      size: querySize,  
       query: {
-          match: {"meta.sensor_id":"Hawaii Guam netflow" }
+        match: { "meta.src_organization":"University of Hawaii" }
       }
     }
   }, (err, result) => {
         //Handle error
     if (err) console.log(err);
     if(result){
-        UHresults = result.body.hits;
-        //console.log(UHresults); 
-        myJSON = JSON.stringify(UHresults);
-        fs.writeFile(outputFiles[i], myJSON, err => {
+        let UHresults = result.body.hits;
+        console.log(UHresults); 
+        let myJSON = JSON.stringify(UHresults);
+        fs.writeFile('./testOutput.json', myJSON, err => {
           if (err) {
               console.log('Error writing file', err)
           } else {
@@ -124,7 +87,40 @@ for (let i = 0; i < outputFiles.length; i++) {
         })
     }
   })
-}
+
+
+
+// This loop will query and store docs in an output file .  
+// The number of docs per file can be set in querySize variable.
+// for (let i = 0; i < 5; i++) {
+//   var querySize = 1000; // max is 1000
+//   var startDoc = i * querySize;
+//   client.search({
+//     index: 'om-ns-netsage-*',
+//     body: {
+//       from: startDoc,
+//       size: querySize,  
+//       query: {
+//           match: {"meta.sensor_id":"University of Hawaii Tstat" }
+//       }
+//     }
+//   }, (err, result) => {
+//         //Handle error
+//     if (err) console.log(err);
+//     if(result){
+//         UHresults = result.body.hits;
+//         //console.log(UHresults); 
+//         myJSON = JSON.stringify(UHresults);
+//         fs.writeFile('./output' + i + '.json', myJSON, err => {
+//           if (err) {
+//               console.log('Error writing file', err)
+//           } else {
+//               console.log('Successfully wrote file' + i)
+//           }
+//         })
+//     }
+//   })
+// }
 
 
 //The result is always in the following format. 
