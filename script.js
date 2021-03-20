@@ -67,28 +67,43 @@ const client = new Client({
 
 //EXAMPLE SEARCH QUERY 
 client.search({
-    index: 'om-ns-netsage-*',
-    body: {
-      query: {
-        match: {'meta.sensor_id.keyword' :'University of Hawaii Tstat' }
-      }
+  index: 'om-ns-netsage-*',
+  body: {
+    query: {
+      match: {'meta.sensor_id.keyword' :'University of Hawaii Tstat' }
     }
-  }, (err, result) => {
-        //Handle error
-    if (err) console.log(err);
-    if(result){
-        UHresults = result.body.hits;
-        console.log(UHresults); 
-        myJSON = JSON.stringify(UHresults);
-        fs.writeFile('./testOutput.json', myJSON, err => {
-          if (err) {
-              console.log('Error writing file', err)
-          } else {
-              console.log('Successfully wrote file')
-          }
-        })
-    }
-  })
+  }
+}, (err, result) => {
+      //Handle error
+  if (err) console.log(err);
+  if(result){
+      //do things with the result. 
+      console.log(result.body.hits); 
+  }
+})
+// client.search({
+//     index: 'om-ns-netsage-*',
+//     body: {
+//       query: {
+//         match: {'meta.sensor_id.keyword' :'University of Hawaii Tstat' }
+//       }
+//     }
+//   }, (err, result) => {
+//         //Handle error
+//     if (err) console.log(err);
+//     if(result){
+//         UHresults = result.body.hits;
+//         console.log(UHresults); 
+//         myJSON = JSON.stringify(UHresults);
+//         fs.writeFile('./testOutput.json', myJSON, err => {
+//           if (err) {
+//               console.log('Error writing file', err)
+//           } else {
+//               console.log('Successfully wrote file')
+//           }
+//         })
+//     }
+//   })
 
 
 //The result is always in the following format. 
