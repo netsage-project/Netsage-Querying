@@ -23,23 +23,6 @@ const client = new Client({
   }
 })
 
-// ANOTHER METHOD TO SETUP CLIENT 
-
-// const client = new Client({
-//     node: 'https://username:password@url'
-// })
-
-//API KEY AUTHENTICATION FOR CLIENT 
-
-// const client = new Client({
-//     node: 'endpoint_URL_here,
-//     auth: {
-//       apiKey: 'apikey_here'
-//     }
-//   })
-
-
-
 
 //USAGE
 
@@ -65,22 +48,29 @@ const client = new Client({
 //     if (err) console.log(err)
 //   })
 
-//EXAMPLE SEARCH QUERY 
-client.search({
+
+
+// This loop will query and store docs in an output file.  
+// The number of docs per file can be set in querySize variable.
+var querySize = 10; // max is 1000
+for (let i = 0; i < 3; i++) {
+  var startDoc = i * querySize;
+  client.search({
     index: 'om-ns-netsage-*',
     body: {
+      from: startDoc,
+      size: querySize,  
       query: {
-        match: {'meta.sensor_id.keyword' :'University of Hawaii Tstat' }
+          match: {'meta.src_organization':'University of Hawaii'}
       }
     }
   }, (err, result) => {
         //Handle error
     if (err) console.log(err);
     if(result){
-        UHresults = result.body.hits;
-        console.log(UHresults); 
-        myJSON = JSON.stringify(UHresults);
-        fs.writeFile('./testOutput.json', myJSON, err => {
+        console.log(result); 
+        myJSON = JSON.stringify(result.body.hits);
+        fs.writeFile('./outputFile' + i + '.json', myJSON, err => {
           if (err) {
               console.log('Error writing file', err)
           } else {
@@ -89,6 +79,7 @@ client.search({
         })
     }
   })
+}
 
 
 //The result is always in the following format. 
