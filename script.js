@@ -16,7 +16,7 @@ const password = process.env.USER_PASSWORD;
 //node : elasticsearch endpoint url 
 //auth : Can use username and password as well as API Key if available. 
 const client = new Client({
-  node: 'https://netsage-elk1.grnoc.iu.edu/esproxy2',
+  node: 'https://netsage-elk1.grnoc.iu.edu/esproxy2/',
   auth: {
     username: userName,
     password: password
@@ -67,10 +67,11 @@ const client = new Client({
 
 //EXAMPLE SEARCH QUERY 
 client.search({
-  index: 'om-ns-netsage-*',
+  index: 'om-netsage-irnc-*',
   body: {
     query: {
-      match: {'meta.sensor_id.keyword' :'University of Hawaii Tstat' }
+      match: {'meta.sensor_id' :'University of Hawaii Tstat' }
+      //match: { "meta.protocol" : "tcp" }
     }
   }
 }, (err, result) => {
@@ -78,7 +79,7 @@ client.search({
   if (err) console.log(err);
   if(result){
       //do things with the result. 
-      console.log(result.body.hits); 
+      console.log(result.body); 
   }
 })
 // client.search({
